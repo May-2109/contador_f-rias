@@ -5,10 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contagem para as Férias</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 </head>
 <body>
-    <div class="container">
+    <div class="container" id="main-container">
         <h1>Contagem para as Férias</h1>
         <div id="logos">
             <img src="Multitex.jpeg" alt="Logotipo Multitex" class="logo">
@@ -16,11 +15,13 @@
         </div>
         <div id="countdown"></div>
         <div id="message">Volte quando o contador zerar e veja a magia!</div>
+    </div>
+    <div id="santa-gif" style="display: none;">
+        <img src="santa-santa-claus.gif" alt="Papai Noel Dançando Funk">
         <div id="fireworks"></div>
-        <button id="play-button">Tocar Música</button>
     </div>
     <audio id="background-music" loop>
-        <source src="Katy Perry - Firework (Official Music Video).mp3" type="audio/mpeg">
+        <source src="Sunflower Experience  Show Cover Ao Vivo  Pop Mashup  Nossas Melhores Versões - Sunflower Jam.mp3" type="audio/mpeg">
     </audio>
     <script src="script.js"></script>
 </body>

@@ -2,25 +2,23 @@ const countdownElement = document.getElementById('countdown');
 const fireworksElement = document.getElementById('fireworks');
 const backgroundMusic = document.getElementById('background-music');
 const messageElement = document.getElementById('message');
-const playButton = document.getElementById('play-button');
+const santaGifElement = document.getElementById('santa-gif');
+const mainContainer = document.getElementById('main-container');
 
 // Definir o volume da música
 backgroundMusic.volume = 0.4;
 
-// Função para iniciar a música
-function startMusic() {
-    backgroundMusic.play().then(() => {
-        console.log("A música começou a tocar.");
-        playButton.style.display = 'none';
-    }).catch(error => {
-        console.log("Erro ao tentar tocar a música:", error);
+// Tentar iniciar a música automaticamente quando a página carregar
+window.addEventListener('load', () => {
+    backgroundMusic.play().catch(error => {
+        console.log("Erro ao tentar tocar a música automaticamente:", error);
+        document.body.addEventListener('click', () => {
+            backgroundMusic.play();
+        }, { once: true });
     });
-}
+});
 
-// Adicionar evento para iniciar a música ao clicar no botão
-playButton.addEventListener('click', startMusic);
-
-// Data de destino
+// Data de destino - defina para uma data próxima para teste
 const targetDate = new Date('December 18, 2024 17:00:00').getTime();
 
 // Atualizar contagem regressiva a cada segundo
@@ -30,9 +28,7 @@ const countdownInterval = setInterval(() => {
 
     if (distance < 0) {
         clearInterval(countdownInterval);
-        countdownElement.textContent = "Férias!";
-        showFireworks();
-        messageElement.style.display = 'none';
+        showGifAndFireworks();
     } else {
         const days = Math.floor(distance / (1000 * 60 * 60 * 24));
         const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -43,37 +39,50 @@ const countdownInterval = setInterval(() => {
     }
 }, 1000);
 
-function showFireworks() {
-    particlesJS('fireworks', {
-        particles: {
-            number: {
-                value: 100
-            },
-            color: {
-                value: ['#ff0000', '#ff8000', '#ffff00', '#80ff00', '#00ff80', '#00ffff', '#0080ff', '#8000ff', '#ff00ff']
-            },
-            shape: {
-                type: 'circle'
-            },
-            opacity: {
-                value: 1
-            },
-            size: {
-                value: 10,
-                random: true
-            },
-            line_linked: {
-                enable: false
-            },
-            move: {
-                enable: true,
-                speed: 5,
-                direction: 'none',
-                random: false,
-                straight: false,
-                out_mode: 'out',
-                bounce: false
-            }
-        }
+function showGifAndFireworks() {
+    // Esconder todos os elementos da página exceto o GIF e os fogos de artifício
+    mainContainer.style.display = 'none';
+    santaGifElement.style.display = 'flex';
+
+    // Tocar música de fundo
+    backgroundMusic.play();
+
+    // Mostrar fogos de artifício
+    for (let i = 0; i < 10; i++) {
+        setTimeout(createRocket, i * 500);
+    }
+}
+
+function createRocket() {
+    const rocket = document.createElement('div');
+    rocket.className = 'rocket';
+    rocket.style.left = `${Math.random() * 100}%`;
+    fireworksElement.appendChild(rocket);
+
+    rocket.addEventListener('animationend', () => {
+        rocket.remove();
+        createExplosion(rocket.style.left);
     });
+}
+
+function createExplosion(leftPosition) {
+    for (let i = 0; i < 20; i++) {
+        setTimeout(() => {
+            const firework = document.createElement('div');
+            firework.className = 'firework';
+            firework.style.left = leftPosition;
+            firework.style.top = '80%';
+            firework.style.backgroundColor = getRandomColor();
+            fireworksElement.appendChild(firework);
+
+            setTimeout(() => {
+                firework.remove();
+            }, 2000);
+        }, i * 50);
+    }
+}
+
+function getRandomColor() {
+    const colors = ['#ff0000', '#ff8000', '#ffff00', '#80ff00', '#00ff80', '#00ffff', '#0080ff', '#8000ff', '#ff00ff'];
+    return colors[Math.floor(Math.random() * colors.length)];
 }
